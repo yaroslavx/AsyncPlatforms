@@ -6,5 +6,5 @@ public class ListingRequest
     public string? RequestBody { get; set; }
     public string? EstimatedCompetionTime { get; set; }
     public string? RequestStatus { get; set; }
-    public string RequestId { get; set; }
+    public string RequestId { get; set; } = Guid.NewGuid().ToString();
 }
