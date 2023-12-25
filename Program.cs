@@ -24,7 +24,7 @@ app.MapPost("api/v1/platforms", async (AppDbContext context, ListingRequest list
     return Results.Accepted($"api/v1/platformstatus/{listingRequest.RequestId}", listingRequest);
 });
 
-app.MapGet("api/v1/platforms/{requestId}", (AppDbContext context, string requestId) =>
+app.MapGet("api/v1/platformstatus/{requestId}", (AppDbContext context, string requestId) =>
 {
     var listingRequest = context.ListingRequests.FirstOrDefault(lr => lr.RequestId == requestId);
     if (listingRequest == null) return Results.NotFound();
@@ -35,14 +35,20 @@ app.MapGet("api/v1/platforms/{requestId}", (AppDbContext context, string request
         ResourceURL = String.Empty
     };
 
-    if (listingRequest.RequestStatus.ToUpper() == "COMPLETE")
+    if (listingRequest.RequestStatus!.ToUpper() == "COMPLETE")
     {
         listingStatus.ResourceURL = $"api/v1/platforms/{Guid.NewGuid().ToString()}";
-        return Results.Ok(listingStatus);
+        // return Results.Ok(listingStatus);
+        return Results.Redirect("http://localhost:5265/" + listingStatus.ResourceURL);
     }
 
     listingStatus.EstimatedCompetionTime = "2023-12-26:19:00:00";
     return Results.Ok(listingStatus);
+});
+
+app.MapGet("api/v1/platforms/{requestId}", (string requestId) =>
+{
+    return Results.Ok("awesome res");
 });
 
 app.Run();
